@@ -6,3 +6,4 @@
 
 #include "../src/common.h"
 #include "gmock/gmock.h"
+#include <exception>

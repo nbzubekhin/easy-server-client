@@ -225,9 +225,9 @@ void TcpServer::printClients() {
     }
 }
 
-/*
- * Receive client packets, and notify user
- */
+///
+/// Receive client packets, and notify user
+///
 void TcpServer::receiveTask(/*TcpServer *context*/) {
 
     Client * client = &m_clients.back();
@@ -253,11 +253,11 @@ void TcpServer::receiveTask(/*TcpServer *context*/) {
     }
 }
 
-/*
- * Erase client from clients vector.
- * If client isn't in the vector, return false. Return
- * true if it is.
- */
+///
+/// Erase client from clients vector.
+/// If client isn't in the vector, return false. Return
+/// true if it is.
+///
 bool TcpServer::deleteClient(Client & client) {
     int clientIndex = -1;
     for (uint i=0; i<m_clients.size(); i++) {
@@ -273,12 +273,12 @@ bool TcpServer::deleteClient(Client & client) {
     return false;
 }
 
-/*
- * Publish incoming client message to observer.
- * Observers get only messages that originated
- * from clients with IP address identical to
- * the specific observer requested IP
- */
+///
+/// Publish incoming client message to observer.
+/// Observers get only messages that originated
+/// from clients with IP address identical to
+/// the specific observer requested IP
+///
 void TcpServer::publishClientMsg(const Client & client, const char * msg, size_t msgSize) {
     for (uint i=0; i<m_subscibers.size(); i++) {
         if (m_subscibers[i].wantedIp == client.getIp() || m_subscibers[i].wantedIp.empty()) {
@@ -289,12 +289,12 @@ void TcpServer::publishClientMsg(const Client & client, const char * msg, size_t
     }
 }
 
-/*
- * Publish client disconnection to observer.
- * Observers get only notify about clients
- * with IP address identical to the specific
- * observer requested IP
- */
+///
+/// Publish client disconnection to observer.
+/// Observers get only notify about clients
+/// with IP address identical to the specific
+/// observer requested IP
+///
 void TcpServer::publishClientDisconnected(const Client & client) {
     for (uint i=0; i<m_subscibers.size(); i++) {
         if (m_subscibers[i].wantedIp == client.getIp()) {
@@ -305,10 +305,10 @@ void TcpServer::publishClientDisconnected(const Client & client) {
     }
 }
 
-/*
- * Bind port and start listening
- * Return tcp_ret_t
- */
+///
+/// Bind port and start listening
+/// Return tcp_ret_t
+///
 pipe_ret_t TcpServer::start(int port) {
     m_sockfd = 0;
     m_clients.reserve(10);
@@ -321,7 +321,7 @@ pipe_ret_t TcpServer::start(int port) {
         ret.msg = strerror(errno);
         return ret;
     }
-    // set socket for reuse (otherwise might have to wait 4 minutes every time socket is closed)
+    /// set socket for reuse (otherwise might have to wait 4 minutes every time socket is closed)
     int option = 1;
     setsockopt(m_sockfd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 
@@ -347,14 +347,14 @@ pipe_ret_t TcpServer::start(int port) {
     return ret;
 }
 
-/*
- * Accept and handle new client socket. To handle multiple clients, user must
- * call this function in a loop to enable the acceptance of more than one.
- * If timeout argument equal 0, this function is executed in blocking mode.
- * If timeout argument is > 0 then this function is executed in non-blocking
- * mode (async) and will quit after timeout seconds if no client tried to connect.
- * Return accepted client
- */
+///
+/// Accept and handle new client socket. To handle multiple clients, user must
+/// call this function in a loop to enable the acceptance of more than one.
+/// If timeout argument equal 0, this function is executed in blocking mode.
+/// If timeout argument is > 0 then this function is executed in non-blocking
+/// mode (async) and will quit after timeout seconds if no client tried to connect.
+/// Return accepted client
+///
 Client TcpServer::acceptClient(uint timeout) {
     socklen_t sosize  = sizeof(m_clientAddress);
     Client newClient;
@@ -393,10 +393,10 @@ Client TcpServer::acceptClient(uint timeout) {
     return newClient;
 }
 
-/*
- * Send message to all connected clients.
- * Return true if message was sent successfully to all clients
- */
+///
+/// Send message to all connected clients.
+/// Return true if message was sent successfully to all clients
+///
 pipe_ret_t TcpServer::sendToAllClients(const char * msg, size_t size) {
     pipe_ret_t ret;
     for (uint i=0; i<m_clients.size(); i++) {
@@ -409,10 +409,10 @@ pipe_ret_t TcpServer::sendToAllClients(const char * msg, size_t size) {
     return ret;
 }
 
-/*
- * Send message to specific client (determined by client IP address).
- * Return true if message was sent successfully
- */
+///
+/// Send message to specific client (determined by client IP address).
+/// Return true if message was sent successfully
+///
 pipe_ret_t TcpServer::sendToClient(const Client & client, const char * msg, size_t size){
     pipe_ret_t ret;
     int numBytesSent = send(client.getFileDescriptor(), (char *)msg, size, 0);
@@ -432,10 +432,10 @@ pipe_ret_t TcpServer::sendToClient(const Client & client, const char * msg, size
     return ret;
 }
 
-/*
- * Close server and clients resources.
- * Return true is success, false otherwise
- */
+///
+/// Close server and clients resources.
+/// Return true is success, false otherwise
+///
 pipe_ret_t TcpServer::finish() {
     pipe_ret_t ret;
     for (uint i=0; i<m_clients.size(); i++) {

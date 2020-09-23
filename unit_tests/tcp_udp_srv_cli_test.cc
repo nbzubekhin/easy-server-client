@@ -1,12 +1,20 @@
 #include "../src/tcp_udp_srv_cli.h"
 #include "unit_tests_common.h"
-#include <exception>
 
-TEST(TcpUdpServerClient, CreationTcpUdpServerClientobject) {
+TEST(TcpIPServer, CreationTcpIPServerObject) {
     try {
-        TCP_UDP_SRV_CLI tcp_server;
+        TcpServer server;
     } catch (std::exception &e) {
-        FAIL() << "An error occured while creating TCP_UDP_SRV_CLI object: "
+        FAIL() << "An error occured while creating TcpServer: "
+               << e.what();
+    }
+}
+
+TEST(TcpIPClient, CreationTcpIPClientObject) {
+    try {
+        TcpClient client;
+    } catch (std::exception &e) {
+        FAIL() << "An error occured while creating TcpClient object: "
                << e.what();
     }
 }

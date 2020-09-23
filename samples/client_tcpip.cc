@@ -35,66 +35,66 @@ using std::cout;
 using std::endl;
 
 namespace {
-char *         app_name = NULL;
+char *app_name = NULL;
 constexpr char MESSAGE_OPTIONS_HELP[] =
     "  Options:\n"
     "   -h --help                            Print this help\n"
-    "   -t --type-protocol   <tcp|udp>       Assign of the used protocol (TCP or UDP)\n"
-    "   -n --number-of-port  <integer>       Assign of the used number of port\n"
-    "   -a --ip-address      <IPv4 address>  Assign of IP address for server screen (by default is: 127.0.0.1)\n\n";
+    "   -t --type-protocol   <tcp|udp>       Assign of the used protocol (TCP "
+    "or UDP)\n"
+    "   -n --number-of-port  <integer>       Assign of the used number of "
+    "port\n"
+    "   -a --ip-address      <IPv4 address>  Assign of IP address for server "
+    "screen (by default is: 127.0.0.1)\n\n";
 
 inline void print_help() {
-    cout << "Usage: " << app_name << " [OPTIONS]" << endl;
-    cout << MESSAGE_OPTIONS_HELP;
-    exit(EXIT_FAILURE);
+  cout << "Usage: " << app_name << " [OPTIONS]" << endl;
+  cout << MESSAGE_OPTIONS_HELP;
+  exit(EXIT_FAILURE);
 }
 }  // namespace
 
 int main(int argc, char *argv[]) {
-    int c;
-    app_name = argv[0];
+  int c;
+  app_name = argv[0];
 
-    for (;;) {
-        int                  option_index   = 0;
-        static struct option long_options[] = {{"type-protocol", required_argument, 0, 't'},
-                                               {"number-of-port", required_argument, 0, 'n'},
-                                               {"ip-address", required_argument, 0, 'a'},
-                                               {"help", no_argument, 0, 'h'},
-                                               {0, 0, 0, 0}};
+  for (;;) {
+    int option_index = 0;
+    static struct option long_options[] = {
+	{"type-protocol", required_argument, 0, 't'},
+	{"number-of-port", required_argument, 0, 'n'},
+	{"ip-address", required_argument, 0, 'a'},
+	{"help", no_argument, 0, 'h'},
+	{0, 0, 0, 0}};
 
-        c = getopt_long(argc, argv, "ha:n:t:", long_options, &option_index);
-        if (c == -1) {
-            break;
-        }
-
-        switch (c) {
-            case 'a':
-                cout << "option 'ip-address' with value " << optarg << endl;
-                break;
-
-            case 't':
-                cout << "option 'type-protocol' with value " << optarg << endl;
-                break;
-
-            case 'n':
-                cout << "option 'number-of-port' with value " << optarg << endl;
-                break;
-
-            case 'h':
-                (void)print_help();
-                break;
-
-            default:
-                cerr << "?? getopt returned not defined character code" << endl;
-                (void)print_help();
-        }
+    c = getopt_long(argc, argv, "ha:n:t:", long_options, &option_index);
+    if (c == -1) {
+      break;
     }
 
-    try {
-        TCP_UDP_SRV_CLI tcp_client;
-    } catch (std::exception &e) {
-        std::cerr << "An error occured while creating TCP_UDP_SRV_CLI object: " << e.what();
-    }
+    switch (c) {
+      case 'a':
+	cout << "option 'ip-address' with value " << optarg << endl;
+	break;
 
-    return EXIT_SUCCESS;
+      case 't':
+	cout << "option 'type-protocol' with value " << optarg << endl;
+	break;
+
+      case 'n':
+	cout << "option 'number-of-port' with value " << optarg << endl;
+	break;
+
+      case 'h':
+	(void)print_help();
+	return EXIT_SUCCESS;
+
+      default:
+	cerr << "?? getopt returned not defined character code" << endl;
+	(void)print_help();
+    }
+  }
+
+  TcpClient client;
+
+  return EXIT_SUCCESS;
 }
